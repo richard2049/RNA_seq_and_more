@@ -1,0 +1,59 @@
+# config/config.yaml
+# Central place for paths + parameters (not used by the script yet)
+
+project:
+  name: "scrna_scvi_pipeline"
+  dataset_id: "GSE171524"         
+  out_dir: "results"
+
+paths:
+  # Prefer forward slashes for cross-platform safety.
+  raw_dir: "D:/DATA/GSE171524_RAW/Decompressed"
+  # If you have a single file mode:
+  example_csv: "D:/DATA/GSE171524_RAW/GSM5226574_C51ctr_UMI_counts.txt"
+
+  # Optional: if you later save intermediate objects
+  integrated_h5ad: "results/integrated.h5ad"
+
+filename_parsing:
+  # Adjust once you standardize filenames.
+  sample_token_index: 2
+  sample_delimiter: "_"
+
+qc:
+  min_genes_per_cell: 200
+  # Filter out high n_genes_by_counts using 98th percentile in pp() function
+  n_genes_upper_quantile: 0.98
+  max_pct_counts_mt: 20
+  max_pct_counts_ribo: 2
+  min_cells_per_gene: 3
+
+doublets:
+  # Current code uses df['dif'] = doublet - singlet and keeps
+  # (prediction == 'doublet') & (dif > 0.5)
+  dif_threshold: 0.5
+
+preprocessing:
+  n_top_hvgs: 2000
+  hvg_flavor: "seurat_v3"
+  target_sum: 10000
+  log1p: true
+
+scvi:
+  layer: "counts"
+  categorical_covariates: ["Sample"]
+  continuous_covariates: ["pct_counts_mt", "total_counts", "pct_counts_ribo"]
+
+  # The script currently hardcodes GPU training:
+  # model.train(accelerator="gpu", devices=1)
+  accelerator: "gpu"   # change to "cpu" if no CUDA
+  devices: 1
+
+neighbors_umap:
+  use_rep: "X_scVI"
+  leiden_resolution: 0.8
+
+outputs:
+  save_integrated_h5ad: true
+  figures_dir: "results/figures"
+  tables_dir: "results/tables"
