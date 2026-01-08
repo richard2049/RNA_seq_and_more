@@ -1,0 +1,42 @@
+name: scrna_scvi_tutorial
+channels:
+  - conda-forge
+  - bioconda
+  - pytorch
+dependencies:
+  # Keep this conservative for compatibility with scanpy + scvi-tools
+  - python=3.10
+
+  # Core scientific stack
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+
+  # Single-cell stack
+  - anndata
+  - scanpy
+  - umap-learn
+  - leidenalg
+  - python-igraph
+  - h5py
+  - pytables
+
+  # Plotting
+  - matplotlib
+  - seaborn
+
+  # scvi-tools + torch
+  # CPU-only by default (most portable).
+  # If you want GPU, see docs/troubleshooting.md (you'll install torch differently).
+  - pytorch
+  - torchvision
+  - torchaudio
+  - cpuonly
+
+  # (Some setups need pip for diffxpy)
+  - pip
+
+  - pip:
+      - scvi-tools
+      - diffxpy
